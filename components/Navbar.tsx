@@ -21,10 +21,10 @@ export default function Navbar() {
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-4">
-            <button className="text-sm font-medium text-gray-200 hover:text-white transition-colors">
+            <Link href="/auth?mode=login" className="px-5 py-2 rounded-full text-sm font-medium text-white border border-white/10 hover:bg-white/10 transition-all">
               Log In
-            </button>
-            <Link href="/auth/signup" className="btn-primary text-sm px-5 py-2">
+            </Link>
+            <Link href="/auth?mode=signup" className="btn-primary text-sm px-5 py-2">
               Sign Up
             </Link>
           </div>

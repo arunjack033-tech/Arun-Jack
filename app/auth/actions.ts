@@ -18,7 +18,7 @@ export async function login(formData: FormData) {
     })
 
     if (error) {
-        redirect('/auth/login?error=Could not authenticate user')
+        redirect('/auth?mode=login&error=Could not authenticate user')
     }
 
     // Check user role to redirect appropriately
@@ -44,29 +44,58 @@ export async function signup(formData: FormData) {
 
     console.log('Signup attempt:', { email, role, name })
 
-    const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: {
-                role: role,
-                full_name: name
-            }
-        }
-    })
+    let signUpError = null;
+    let signUpData = null;
 
-    if (error) {
-        console.error('Signup error:', error)
-        redirect(`/auth/signup?error=${encodeURIComponent(error.message)}`)
+    try {
+        const result = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    role: role,
+                    full_name: name
+                }
+            }
+        });
+
+        if (result.error) {
+            signUpError = result.error;
+        } else {
+            signUpData = result.data;
+        }
+    } catch (err: any) {
+        // Fallback for unexpected throws
+        signUpError = { message: err.message || "Unknown error during signup mechanism" };
+    }
+
+    if (signUpError) {
+        console.error('Signup error:', signUpError)
+        redirect(`/auth?mode=signup&error=${encodeURIComponent(signUpError.message)}`)
+    }
+
+    // Send Welcome Email via Brevo
+    try {
+        const { sendEmail } = await import('@/utils/brevo');
+        const { getWelcomeEmailTemplate } = await import('@/utils/email-templates');
+
+        await sendEmail({
+            to: [{ email: email, name: name }],
+            subject: 'Welcome to UrbanConnect! 🚀',
+            htmlContent: getWelcomeEmailTemplate(name, role)
+        });
+    } catch (emailError) {
+        // Log but don't fail the registration if email fails
+        console.error("Failed to send welcome email:", emailError);
     }
 
     revalidatePath('/', 'layout')
-    redirect('/auth/login?message=Check email to continue sign in process')
+    redirect('/auth?mode=login&message=Account created! Please check your email to confirm.')
 }
 
 export async function signout() {
     const supabase = await createClient()
     await supabase.auth.signOut()
     revalidatePath('/', 'layout')
-    redirect('/auth/login')
+    redirect('/auth?mode=login')
 }
