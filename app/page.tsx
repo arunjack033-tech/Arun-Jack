@@ -1,16 +1,9 @@
 import Link from "next/link";
 import {
-    Sparkles,
-    Zap,
-    Wrench,
-    Car,
-    Leaf,
-    ArrowRight,
-    Star,
-    Shield,
-    Clock,
-    LogIn,
+    Sparkles, Zap, Wrench, Car, Leaf,
+    ArrowRight, Star, Shield, Clock
 } from "lucide-react";
+import DashboardHeader from "@/components/DashboardHeader";
 
 export default function Home() {
     const services = [
@@ -42,19 +35,14 @@ export default function Home() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link
-                        href="/services"
+                    <Link href="/services"
                         className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl
-                       bg-[var(--primary)] hover:bg-opacity-90 transition-all"
-                    >
+            bg-[var(--primary)] hover:bg-opacity-90 transition-all">
                         Book a Service <ArrowRight size={20} />
                     </Link>
 
-                    <Link
-                        href="/dashboard"
-                        className="px-8 py-4 rounded-xl border border-white/20
-                       hover:bg-white/10 transition-all"
-                    >
+                    <Link href="/dashboard"
+                        className="px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10 transition-all">
                         View Dashboard
                     </Link>
                 </div>
@@ -63,21 +51,15 @@ export default function Home() {
             {/* 🔹 SERVICES */}
             <section className="container mx-auto px-6 py-20">
                 <h3 className="text-3xl font-bold mb-10 text-center">Our Services</h3>
-
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     {services.map((service, i) => (
-                        <div
-                            key={i}
-                            className="p-6 rounded-2xl bg-white/5 border border-white/10
-                         hover:border-[var(--primary)] hover:-translate-y-1
-                         transition-all text-center"
-                        >
-                            <div
-                                className={`w-16 h-16 mx-auto mb-4 rounded-2xl ${service.color} bg-opacity-20 flex items-center justify-center`}
-                            >
+                        <div key={i}
+                            className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary)]
+              hover:-translate-y-1 transition-all text-center">
+                            <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl ${service.color}
+              bg-opacity-20 flex items-center justify-center`}>
                                 <service.icon className="w-8 h-8" />
                             </div>
-
                             <h4 className="font-semibold">{service.name}</h4>
                             <p className="text-sm text-gray-400">{service.desc}</p>
                         </div>
@@ -85,24 +67,15 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 🔹 TRUST SECTION */}
+            {/* 🔹 TRUST */}
             <section className="container mx-auto px-6 pb-20">
                 <div className="grid md:grid-cols-3 gap-8">
-                    <TrustCard
-                        icon={<Shield />}
-                        title="Secure & Verified"
-                        text="All professionals are background verified."
-                    />
-                    <TrustCard
-                        icon={<Star />}
-                        title="Top Rated"
-                        text="Only best-rated service providers."
-                    />
-                    <TrustCard
-                        icon={<Clock />}
-                        title="On Time Service"
-                        text="Punctual & reliable appointments."
-                    />
+                    <TrustCard icon={<Shield />} title="Secure & Verified"
+                        text="All professionals are background verified." />
+                    <TrustCard icon={<Star />} title="Top Rated"
+                        text="Only best-rated service providers." />
+                    <TrustCard icon={<Clock />} title="On Time Service"
+                        text="Punctual & reliable appointments." />
                 </div>
             </section>
 
@@ -114,13 +87,10 @@ export default function Home() {
     );
 }
 
-/* 🔹 TRUST CARD COMPONENT */
-function TrustCard({ icon, title, text }) {
+function TrustCard({ icon, title, text }: any) {
     return (
         <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
-            <div className="w-12 h-12 mx-auto mb-4 text-[var(--secondary)]">
-                {icon}
-            </div>
+            <div className="w-12 h-12 mx-auto mb-4 text-[var(--secondary)]">{icon}</div>
             <h4 className="text-xl font-semibold mb-2">{title}</h4>
             <p className="text-gray-400">{text}</p>
         </div>

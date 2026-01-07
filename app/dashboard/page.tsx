@@ -1,24 +1,21 @@
+import Link from "next/link";
 
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+export default function Dashboard() {
+    return (
+        <div className="min-h-screen bg-[#0b0f1a] text-white p-10">
+            <h1 className="text-3xl font-bold mb-8 text-purple-400">Dashboard</h1>
 
-export default async function DashboardRedirect() {
-    const supabase = await createClient();
+            <div className="grid md:grid-cols-2 gap-6">
+                <Link href="/dashboard/customer" className="p-6 bg-slate-900 rounded-xl hover:ring-2 ring-purple-500">
+                    <h2 className="text-xl font-semibold mb-2">Customer Dashboard</h2>
+                    <p>Book and manage services</p>
+                </Link>
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-        redirect("/auth?mode=login");
-    }
-
-    const role = user.user_metadata?.role;
-
-    if (role === "provider") {
-        redirect("/dashboard/provider");
-    } else {
-        // Default to customer layout if role is missing or customer
-        redirect("/dashboard/customer");
-    }
+                <Link href="/dashboard/provider" className="p-6 bg-slate-900 rounded-xl hover:ring-2 ring-cyan-400">
+                    <h2 className="text-xl font-semibold mb-2">Provider Dashboard</h2>
+                    <p>Manage jobs and earnings</p>
+                </Link>
+            </div>
+        </div>
+    );
 }
