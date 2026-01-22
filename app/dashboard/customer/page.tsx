@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { signout } from "@/app/auth/actions";
+import Link from "next/link";
 
 export default async function CustomerDashboard() {
     const supabase = await createClient();
@@ -37,11 +37,13 @@ export default async function CustomerDashboard() {
                     </p>
                 </div>
 
-                <form action={signout}>
-                    <button className="text-sm border border-red-500/50 text-red-200 hover:bg-red-500/10 px-4 py-2 rounded-lg">
-                        Sign Out
-                    </button>
-                </form>
+                {/* ✅ FIXED SIGN OUT */}
+                <Link
+                    href="/auth/logout"
+                    className="text-sm border border-red-500/50 text-red-200 hover:bg-red-500/10 px-4 py-2 rounded-lg"
+                >
+                    Sign Out
+                </Link>
             </div>
 
             {/* APPOINTMENTS */}
@@ -67,7 +69,7 @@ export default async function CustomerDashboard() {
                             {/* STATUS BADGE */}
                             <span
                                 className={`px-3 py-1 rounded-full text-sm font-semibold
-                ${appt.status === "ACCEPTED"
+                                ${appt.status === "ACCEPTED"
                                         ? "bg-green-500/20 text-green-400"
                                         : appt.status === "REJECTED"
                                             ? "bg-red-500/20 text-red-400"

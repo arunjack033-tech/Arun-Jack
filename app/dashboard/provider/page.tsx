@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { signout } from "@/app/auth/actions";
+import Link from "next/link";
 
 export default async function ProviderDashboard() {
     const supabase = await createClient();
@@ -43,11 +43,14 @@ export default async function ProviderDashboard() {
                     <button className="btn-primary text-sm px-4 py-2">
                         Edit Profile
                     </button>
-                    <form action={signout}>
-                        <button className="text-sm border border-red-500/50 text-red-200 hover:bg-red-500/10 px-4 py-2 rounded-lg">
-                            Sign Out
-                        </button>
-                    </form>
+
+                    {/* ✅ FIXED SIGN OUT */}
+                    <Link
+                        href="/auth/logout"
+                        className="text-sm border border-red-500/50 text-red-200 hover:bg-red-500/10 px-4 py-2 rounded-lg"
+                    >
+                        Sign Out
+                    </Link>
                 </div>
             </div>
 
@@ -98,14 +101,10 @@ export default async function ProviderDashboard() {
                                 </span>
                             </p>
 
-                            {/* ✅ ACCEPT / REJECT BUTTONS */}
                             {appt.status === "PENDING" && (
                                 <div className="flex gap-3 mt-3">
                                     <form action="/api/appointments/accept" method="POST">
                                         <input type="hidden" name="appointmentId" value={appt.id} />
-                                        <input type="hidden" name="userEmail" value={appt.user_email} />
-                                        <input type="hidden" name="userName" value={appt.user_name} />
-                                        <input type="hidden" name="date" value={appt.date} />
                                         <button className="px-4 py-1 rounded bg-green-600 text-white">
                                             Accept
                                         </button>
@@ -113,9 +112,6 @@ export default async function ProviderDashboard() {
 
                                     <form action="/api/appointments/reject" method="POST">
                                         <input type="hidden" name="appointmentId" value={appt.id} />
-                                        <input type="hidden" name="userEmail" value={appt.user_email} />
-                                        <input type="hidden" name="userName" value={appt.user_name} />
-                                        <input type="hidden" name="date" value={appt.date} />
                                         <button className="px-4 py-1 rounded bg-red-600 text-white">
                                             Reject
                                         </button>
