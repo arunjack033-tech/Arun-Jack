@@ -1,34 +1,66 @@
-import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
+"use client";
 
-export default async function DashboardHeader() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
+
+export default function DashboardHeader() {
+    const supabase = createClient();
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data }) => {
+            setUser(data.user);
+        });
+
+        const { data: listener } =
+            supabase.auth.onAuthStateChange((_event, session) => {
+                setUser(session?.user ?? null);
+            });
+
+        return () => {
+            listener.subscription.unsubscribe();
+        };
+    }, []);
 
     return (
-        <div className="w-full bg-[#0b0f1a] border-b border-white/10 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-                <h1 className="text-xl font-bold text-blue-400">UrbanConnect</h1>
+        <header className="fixed top-6 z-50 w-full px-4">
+            <div className="mx-auto max-w-7xl h-20 flex items-center justify-between rounded-2xl bg-[#0b0f1a]/80 backdrop-blur-xl border border-white/10 px-6">
 
-                <div className="flex gap-6 items-center text-gray-300">
-                    <Link href="/services">Find Service</Link>
-                    <Link href="/my-bookings">My Bookings</Link>
-                    <Link href="/dashboard">Dashboard</Link>
+                <Link href="/" className="text-xl font-bold text-white">
+                    Urban<span className="text-blue-400">Connect</span>
+                </Link>
 
+                <div className="flex items-center gap-4">
                     {user ? (
-                        <Link href="/auth/logout" className="px-4 py-1 rounded-full border border-red-500 text-red-400">
-                            Sign Out
-                        </Link>
+                        <>
+                            <span className="text-sm text-gray-300">
+                                {user.email?.split("@")[0]}
+                            </span>
+                            <button
+                                onClick={async () => {
+                                    await supabase.auth.signOut();
+                                }}
+                                className="text-red-400 font-semibold"
+                            >
+                                Sign Out
+                            </button>
+                        </>
                     ) : (
                         <>
-                            <Link href="/auth/login">Login</Link>
-                            <Link href="/auth/signup" className="px-4 py-1 rounded-full bg-blue-600 text-white">
+                            <Link href="/auth/login" className="text-gray-300">
+                                Login
+                            </Link>
+                            <Link
+                                href="/auth/signup"
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                            >
                                 Sign Up
                             </Link>
                         </>
                     )}
                 </div>
             </div>
-        </div>
+        </header>
     );
 }

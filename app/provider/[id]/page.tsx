@@ -1,15 +1,16 @@
-import { supabaseServer } from "@/lib/supabaseServer";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
 export default async function ProviderProfilePage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const { id } = params;
+    const { id } = await params;
+    const supabase = await createClient();
 
     // ✅ FETCH APPOINTMENTS FOR THIS PROVIDER
-    const { data: appointments, error } = await supabaseServer
+    const { data: appointments, error } = await supabase
         .from("appointments")
         .select("*")
         .eq("provider_id", id)

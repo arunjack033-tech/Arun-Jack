@@ -1,11 +1,11 @@
 import "./globals.css";
-import PremiumShell from "@/components/PremiumShell";
+import AppShell from "@/components/AppShell";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
             <body>
-                <PremiumShell>{children}</PremiumShell>
+                <AppShell>{children}</AppShell>
             </body>
         </html>
     );

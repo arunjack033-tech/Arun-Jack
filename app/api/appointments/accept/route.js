@@ -1,11 +1,12 @@
-import { supabaseServer } from "@/lib/supabaseServer";
+import { createClient } from "@/utils/supabase/server";
 import { sendEmail } from "@/lib/sendEmail";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
+    const supabase = await createClient();
     const { appointmentId, userEmail, userName, date } = await req.json();
 
-    await supabaseServer
+    await supabase
         .from("appointments")
         .update({ status: "ACCEPTED" })
         .eq("id", appointmentId);
